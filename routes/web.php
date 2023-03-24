@@ -12,7 +12,8 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+Route::redirect('/', '/chat');
 
-Route::get('/', function () {
-    return view('welcome');
+Route::prefix('/chat')->group(function () {
+    Route::get('/', 'ChatController@index')->name('chat');
 });
