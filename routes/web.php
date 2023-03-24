@@ -14,6 +14,6 @@ use Illuminate\Support\Facades\Route;
 */
 Route::redirect('/', '/chat');
 
-Route::prefix('/chat')->group(function () {
+Route::prefix('chat')->namespace('Chat')->group(function () {
     Route::get('/', 'ChatController@index')->name('chat');
 });
