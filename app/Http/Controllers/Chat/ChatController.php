@@ -2,11 +2,20 @@
 
 namespace App\Http\Controllers\Chat;
 
+use Exception;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Services\Chat\ChatService;
 
 class ChatController extends Controller
 {
+    protected ChatService $chatService;
+
+    public function __construct()
+    {
+        $this->chatService = new ChatService();
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -63,4 +72,19 @@ class ChatController extends Controller
     {
         //
     }
+
+    public function textChatSubmitAjax(Request $request)
+    {
+        try {
+            $input = $request->all();
+            // handle $input['message']
+            $chat_response = $this->chatService->submitMessageAndGetResponse($input['message']);
+        } catch (Exception $ex) {
+            //TODO: Handle error handling
+            var_dump($ex->getMessage());
+            dd('caught some error');
+        }
+        return $chat_response;
+    }
+    
 }

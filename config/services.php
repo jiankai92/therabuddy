@@ -31,4 +31,9 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'openai' => [
+        'host' => env('OPENAI_API_HOST', 'https://api.openai.com'),
+        'version' => env('OPENAI_API_VERSION', 'v1'),
+        'key' => env('OPENAI_API_KEY', ''),
+    ]
 ];

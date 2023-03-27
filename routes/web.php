@@ -16,4 +16,5 @@ Route::redirect('/', '/chat');
 
 Route::prefix('chat')->namespace('Chat')->group(function () {
     Route::get('/', 'ChatController@index')->name('chat');
+    Route::post('/send/text', 'ChatController@textChatSubmitAjax')->name('text-chat-submit');
 });
