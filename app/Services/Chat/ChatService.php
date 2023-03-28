@@ -3,8 +3,6 @@
 
 namespace App\Services\Chat;
 
-//use App\Services\Chat\OpenAiService;
-
 class ChatService
 {
     protected OpenAiService $openAiService;
