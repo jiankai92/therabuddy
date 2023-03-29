@@ -100,16 +100,8 @@
 </script>
 <script type="module">
     (function () {
-        var chat = {
+        let chat = {
             messageToSend: '',
-            messageResponses: [
-                'Why did the web developer leave the restaurant? Because of the table layout.',
-                'How do you comfort a JavaScript bug? You console it.',
-                'An SQL query enters a bar, approaches two tables and asks: "May I join you?"',
-                'What is the most used language in programming? Profanity.',
-                'What is the object-oriented way to become wealthy? Inheritance.',
-                'An SEO expert walks into a bar, bars, pub, tavern, public house, Irish pub, drinks, beer, alcohol'
-            ],
             init: function () {
                 this.cacheDOM();
                 this.bindEvents();
@@ -128,29 +120,31 @@
             render: async function () {
                 this.scrollToBottom();
                 if (this.messageToSend.trim() !== '') {
-                    var template = document.querySelector("#message-template").innerHTML;
-                    var context = {
+                    let template = document.querySelector("#message-template").innerHTML;
+                    let context = {
                         messageOutput: this.messageToSend,
                         time: this.getCurrentTime()
                     };
-                    var renderedTemplate = this.compileTemplate(template, context);
+                    let renderedTemplate = this.compileTemplate(template, context);
 
                     this.chatHistoryList.insertAdjacentHTML('beforeend', renderedTemplate);
                     this.scrollToBottom();
                     this.textarea.value = '';
 
                     // responses
-                    // TODO: Hit API here
-                    let chatResponse = await this.sendAndReceiveChatResponse(this.messageToSend)
-                    var templateResponse = document.querySelector("#message-response-template").innerHTML;
-                    var contextResponse = {
-                        response: chatResponse.data,
-                        // response: this.getRandomItem(this.messageResponses),
-                        time: this.getCurrentTime()
-                    };
-                    var renderedResponseTemplate = this.compileTemplate(templateResponse, contextResponse);
-                    this.chatHistoryList.insertAdjacentHTML('beforeend', renderedResponseTemplate);
-                    this.scrollToBottom();
+                    let chatResponse = await this.sendAndReceiveChatResponse(this.messageToSend);
+                    if (chatResponse.data.code === 200) {
+                        let templateResponse = document.querySelector("#message-response-template").innerHTML;
+                        let contextResponse = {
+                            response: chatResponse.data.body,
+                            time: this.getCurrentTime()
+                        };
+                        let renderedResponseTemplate = this.compileTemplate(templateResponse, contextResponse);
+                        this.chatHistoryList.insertAdjacentHTML('beforeend', renderedResponseTemplate);
+                        this.scrollToBottom();
+                    } else {
+                        // TODO: render error in chatbox
+                    }
                 }
             },
             compileTemplate: function (template, context) {
@@ -174,9 +168,6 @@
             },
             getCurrentTime: function () {
                 return new Date().toLocaleTimeString().replace(/([\d]+:[\d]{2})(:[\d]{2})(.*)/, "$1$3");
-            },
-            getRandomItem: function (arr) {
-                return arr[Math.floor(Math.random() * arr.length)];
             },
             sendAndReceiveChatResponse: async function (message) {
                 return await axios.post('{{route('text-chat-submit')}}', {message: message})

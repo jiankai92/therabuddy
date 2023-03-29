@@ -6,14 +6,17 @@ use Exception;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Services\Chat\ChatService;
+use App\Services\Ajax\AjaxResponseService;
 
 class ChatController extends Controller
 {
     protected ChatService $chatService;
+    protected AjaxResponseService $ajaxResponseService;
 
     public function __construct()
     {
         $this->chatService = new ChatService();
+        $this->ajaxResponseService = new AjaxResponseService();
     }
 
     /**
@@ -73,18 +76,15 @@ class ChatController extends Controller
         //
     }
 
-    public function textChatSubmitAjax(Request $request)
+    public function textChatSubmitAjax(Request $request): \Illuminate\Http\JsonResponse
     {
         try {
             $input = $request->all();
-            // handle $input['message']
             $chat_response = $this->chatService->submitMessageAndGetResponse($input['message']);
+            return $this->ajaxResponseService->setCode(200)->setBody($chat_response)->send();
         } catch (Exception $ex) {
-            //TODO: Handle error handling
-            var_dump($ex->getMessage());
-            dd('caught some error');
+            return $this->ajaxResponseService->setError($ex->getMessage(), 500)->send();
         }
-        return $chat_response;
     }
     
 }
