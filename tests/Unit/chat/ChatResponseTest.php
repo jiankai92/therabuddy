@@ -16,7 +16,7 @@ class ChatResponseTest extends TestCase
     }
 
     /**
-     * A basic unit test example.
+     * Test to see if the if the output of chat response is string
      * @group external-services
      */
     public function testChatResponseFormat(): void
