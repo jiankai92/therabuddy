@@ -17,6 +17,7 @@ class ChatResponseTest extends TestCase
 
     /**
      * A basic unit test example.
+     * @group external-services
      */
     public function testChatResponseFormat(): void
     {
