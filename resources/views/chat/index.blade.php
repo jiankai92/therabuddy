@@ -61,10 +61,11 @@
         </div> <!-- end chat-history -->
 
         <div class="chat-message clearfix">
-            <label for="message-to-send"></label><textarea name="message-to-send" id="message-to-send"
-                                                           placeholder="Type your message" rows="3"></textarea>
-
-            <i class="fa fa-file-o"></i> &nbsp;&nbsp;&nbsp;
+            <label for="message-to-send"></label>
+            <textarea name="message-to-send" id="message-to-send"
+                      placeholder="Type your message" rows="3"></textarea>
+            <i class="fa fa-file-o"></i>
+            <span class="chat-error">&nbsp;</span>
             <i class="fa fa-file-image-o"></i>
 
             <button>Send</button>
@@ -115,35 +116,41 @@
             },
             bindEvents: function () {
                 this.button.addEventListener('click', this.addMessage.bind(this));
-                this.textarea.addEventListener('keyup', this.addMessageEnter.bind(this));
+                this.textarea.addEventListener('keydown', this.addMessageEnter.bind(this));
             },
             render: async function () {
                 this.scrollToBottom();
                 if (this.messageToSend.trim() !== '') {
+                    this.toggleErrorState(false);
+                    // Get message content
                     let template = document.querySelector("#message-template").innerHTML;
                     let context = {
                         messageOutput: this.messageToSend,
                         time: this.getCurrentTime()
                     };
+                    // Populate sender message and reset 
                     let renderedTemplate = this.compileTemplate(template, context);
-
                     this.chatHistoryList.insertAdjacentHTML('beforeend', renderedTemplate);
                     this.scrollToBottom();
                     this.textarea.value = '';
 
                     // responses
-                    let chatResponse = await this.sendAndReceiveChatResponse(this.messageToSend);
-                    if (chatResponse.data.code === 200) {
-                        let templateResponse = document.querySelector("#message-response-template").innerHTML;
-                        let contextResponse = {
-                            response: chatResponse.data.body,
-                            time: this.getCurrentTime()
-                        };
-                        let renderedResponseTemplate = this.compileTemplate(templateResponse, contextResponse);
-                        this.chatHistoryList.insertAdjacentHTML('beforeend', renderedResponseTemplate);
-                        this.scrollToBottom();
-                    } else {
-                        // TODO: render error in chatbox
+                    try {
+                        let chatResponse = await this.sendAndReceiveChatResponse(this.messageToSend);
+                        if (chatResponse.data.code === 200) {
+                            let templateResponse = document.querySelector("#message-response-template").innerHTML;
+                            let contextResponse = {
+                                response: chatResponse.data.body,
+                                time: this.getCurrentTime()
+                            };
+                            let renderedResponseTemplate = this.compileTemplate(templateResponse, contextResponse);
+                            this.chatHistoryList.insertAdjacentHTML('beforeend', renderedResponseTemplate);
+                            this.scrollToBottom();
+                        } else {
+                            this.toggleErrorState(true);
+                        }
+                    } catch (e) {
+                        this.toggleErrorState(true);
                     }
                 }
             },
@@ -157,8 +164,9 @@
                 this.render();
             },
             addMessageEnter: function (event) {
-                // enter was pressed
-                if (event.keyCode === 13) {
+                if (event.keyCode === 13 && !event.shiftKey) {
+                    // enter without shift prevent line break and enter message
+                    event.preventDefault();
                     this.addMessage();
                 }
             },
@@ -171,6 +179,17 @@
             },
             sendAndReceiveChatResponse: async function (message) {
                 return await axios.post('{{route('text-chat-submit')}}', {message: message})
+            },
+            toggleErrorState: function (hasError) {
+                let errorMessage = document.querySelector("span.chat-error");
+                let chatBox = document.querySelector("#message-to-send");
+                if (hasError) {
+                    errorMessage.innerHTML = 'Error Generating response, please try again';
+                    chatBox.classList.add("is-invalid");
+                } else {
+                    errorMessage.innerHTML = ''
+                    chatBox.classList.remove("is-invalid");
+                }
             }
         };
 

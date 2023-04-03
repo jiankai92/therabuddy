@@ -13,6 +13,10 @@ body {
     color: white;
 }
 
+.chat-error {
+    color: #de2f3b;
+}
+
 .container {
     margin: 0 auto;
     width: 750px;
@@ -125,6 +129,11 @@ body {
     margin-bottom: 10px;
     border-radius: 5px;
     resize: none;
+}
+
+.chat .chat-message textarea.is-invalid {
+    border: 1px solid #DE2F3B;
+    outline: 1px solid #DE2F3B;
 }
 
 .chat .chat-message .fa-file-o,
