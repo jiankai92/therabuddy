@@ -11,19 +11,14 @@ return new class extends Migration {
      */
     public function up(): void
     {
-
-        // Using raw sql as laravel migration does not support hstore column creation
-        DB::statement(
-            'CREATE TABLE ai_chat
-            (
-            id SERIAL PRIMARY KEY,
-            user_id INT NULL,
-            session_id VARCHAR(255) NULL,
-            metadata hstore NULL,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            )'
-        );
+        Schema::create('ai_chat', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedInteger('user_id')->nullable();
+            $table->string('session_id')->nullable();
+            $table->jsonb('messages');
+            $table->timestamps();
+            $table->index(['user_id']);
+        });
     }
 
     /**
