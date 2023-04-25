@@ -1,74 +1,39 @@
 @extends('base')
-<div class="container clearfix">
-    <div class="chat">
-        <div class="chat-header clearfix">
-            <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/chat_avatar_01_green.jpg" alt="avatar"/>
-
-            <div class="chat-about">
-                <div class="chat-with">Chat with Vincent Porter</div>
+<div class="mx-auto my-0 rounded clearfix">
+    <div class="bg-slate-100">
+        <div class="p-5 border-2 border-solid border-white clearfix">
+            <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/chat_avatar_01_green.jpg" alt="avatar"
+                 class="float-left"/>
+            <div class="float-left pl-2.5 mt-1.5">
+                <div class="chat-with font-bold text-base">Therabuddy</div>
                 <div class="chat-num-messages">already 1 902 messages</div>
             </div>
             <i class="fa fa-star"></i>
         </div> <!-- end chat-header -->
 
-        <div class="chat-history">
+        <div class="chat-history py-7 px-5">
             <ul>
-                <li class="clearfix">
-                    <div class="message-data align-right">
-                        <span class="message-data-time">10:10 AM, Today</span> &nbsp; &nbsp;
-                        <span class="message-data-name">Olia</span> <i class="fa fa-circle me"></i>
-
-                    </div>
-                    <div class="message other-message float-right">
-                        Hi Vincent, how are you? How is the project coming along?
-                    </div>
-                </li>
-
-                <li>
-                    <div class="message-data">
-                        <span class="message-data-name"><i class="fa fa-circle online"></i> Vincent</span>
-                        <span class="message-data-time">10:12 AM, Today</span>
-                    </div>
-                    <div class="message my-message">
-                        Are we meeting today? Project has been already finished and I have results to show you.
-                    </div>
-                </li>
-
-                <li class="clearfix">
-                    <div class="message-data align-right">
-                        <span class="message-data-time">10:14 AM, Today</span> &nbsp; &nbsp;
-                        <span class="message-data-name">Olia</span> <i class="fa fa-circle me"></i>
-
-                    </div>
-                    <div class="message other-message float-right">
-                        Well I am not sure. The rest of the team is not here yet. Maybe in an hour or so? Have you faced
-                        any problems at the last phase of the project?
-                    </div>
-                </li>
-
-                <li>
-                    <div class="message-data">
-                        <span class="message-data-name"><i class="fa fa-circle online"></i> Vincent</span>
-                        <span class="message-data-time">10:20 AM, Today</span>
-                    </div>
-                    <div class="message my-message">
-                        Actually everything was fine. I'm very excited to show this to our team.
-                    </div>
-                </li>
-
+                @include('chat.partials.message-bubble', [
+                    'time' => '10:10 AM, Today',
+                    'message' => 'Hi Vincent, how are you? How is the project coming along?'
+                ])
+                @include('chat.partials.response-bubble', [
+                    'time' => '10:12 AM, Today',
+                    'message' => 'Are we meeting today? Project has been already finished and I have results to show you.'
+                ])
             </ul>
-
         </div> <!-- end chat-history -->
-
-        <div class="chat-message clearfix">
-            <label for="message-to-send"></label>
+        <div class="chat-message clearfix p-7">
             <textarea name="message-to-send" id="message-to-send"
-                      placeholder="Type your message" rows="3"></textarea>
+                      placeholder="Type your message" rows="3"
+                      class="w-full px-5 py-2 text-sm mb-2 rounded"></textarea>
             <i class="fa fa-file-o"></i>
-            <span class="chat-error">&nbsp;</span>
             <i class="fa fa-file-image-o"></i>
 
-            <button>Send</button>
+            <span class="chat-error text-red-700">&nbsp;</span>
+            <button class="float-right border-0 uppercase text-base font-bold cursor-pointer">
+                <label for="message-to-send">Send</label>
+            </button>
 
         </div> <!-- end chat-message -->
 
@@ -77,27 +42,17 @@
 </div> <!-- end container -->
 
 <script id="message-template" type="text/template">
-    <li class="clearfix">
-        <div class="message-data align-right">
-            <span class="message-data-time">${time}, Today</span> &nbsp; &nbsp;
-            <span class="message-data-name">Olia</span> <i class="fa fa-circle me"></i>
-        </div>
-        <div class="message other-message float-right">
-            ${messageOutput}
-        </div>
-    </li>
+@include('chat.partials.message-bubble', [
+    'time' => '${time}, Today',
+    'message' => '${messageOutput}'
+])
 </script>
 
 <script id="message-response-template" type="text/template">
-    <li>
-        <div class="message-data">
-            <span class="message-data-name"><i class="fa fa-circle online"></i> Vincent</span>
-            <span class="message-data-time">${time}, Today</span>
-        </div>
-        <div class="message my-message">
-            ${response}
-        </div>
-    </li>
+@include('chat.partials.response-bubble', [
+    'time' => '${time}, Today',
+    'message' => '${response}'
+])
 </script>
 <script type="module">
     (function () {
@@ -185,10 +140,32 @@
                 let chatBox = document.querySelector("#message-to-send");
                 if (hasError) {
                     errorMessage.innerHTML = 'Error Generating response, please try again';
-                    chatBox.classList.add("is-invalid");
+                    chatBox.classList.add(
+                        "focus:ring-0",
+                        "border",
+                        "border-solid",
+                        "border-red-700",
+                        "focus:border",
+                        "focus:border-solid",
+                        "focus:border-red-700",
+                        "focus-visible:border",
+                        "focus-visible:border-solid",
+                        "focus-visible:border-red-700",
+                    );
                 } else {
                     errorMessage.innerHTML = ''
-                    chatBox.classList.remove("is-invalid");
+                    chatBox.classList.remove(
+                        "focus:ring-0",
+                        "border",
+                        "border-solid",
+                        "border-red-700",
+                        "focus:border",
+                        "focus:border-solid",
+                        "focus:border-red-700",
+                        "focus-visible:border",
+                        "focus-visible:border-solid",
+                        "focus-visible:border-red-700",
+                    );
                 }
             }
         };
