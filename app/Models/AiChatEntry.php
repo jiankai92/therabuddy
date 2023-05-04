@@ -10,4 +10,9 @@ class AiChatEntry extends Model
     use HasFactory;
     
     protected $table = 'ai_chat_entry';
+
+    protected $hidden = ['created_at'];
+
+    protected $fillable = ['chat_id', 'type', 'message'];
+    
 }
