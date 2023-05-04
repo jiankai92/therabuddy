@@ -2,21 +2,22 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('ai_chat', function (Blueprint $table) {
+        Schema::create('ai_chat_entry', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('user_id')->nullable();
-            $table->string('session_id')->nullable();
+            $table->unsignedInteger('chat_id');
+            $table->string('type');
+            $table->string('message');
             $table->timestamp('created_at')->useCurrent();
-            $table->index(['user_id']);
+            $table->index(['chat_id']);
         });
     }
 
@@ -25,6 +26,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('ai_chat');
+        Schema::dropIfExists('ai_chat_entry');
     }
 };
