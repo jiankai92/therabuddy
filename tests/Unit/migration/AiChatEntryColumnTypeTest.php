@@ -8,23 +8,23 @@ use Doctrine\DBAL\Types\Types as DBALTypes;
 use Tests\TestCase;
 
 //Import functions for testing
-use App\Models\AiChat;
+use App\Models\AiChatEntry;
 
-class AiChatColumnTypeTest extends TestCase
+class AiChatEntryColumnTypeTest extends TestCase
 {
     use DatabaseMigrations;
 
-    private AiChat $chat_model;
+    private AiChatEntry $chat_model;
     private array $db_columns;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->chat_model = new AiChat();
+        $this->chat_model = new AiChatEntry();
     }
 
     /**
-     * Check if ai_chats table is created with the required column types
+     * Check if ai_chat_entry table is created with the required column types
      * @group database-setup
      */
     public function test_created_ai_chat_columns_type(): void
@@ -35,11 +35,14 @@ class AiChatColumnTypeTest extends TestCase
                 case 'id':
                     $this->assertSame(DBALTypes::BIGINT, Schema::getColumnType($table_name, $col));
                     break;
-                case 'user_id':
+                case 'chat_id':
                     $this->assertSame(DBALTypes::INTEGER, Schema::getColumnType($table_name, $col));
                     break;
-                case 'session_id':
+                case 'type':
                     $this->assertSame(DBALTypes::STRING, Schema::getColumnType($table_name, $col));
+                    break;
+                case 'message':
+                    $this->assertSame(DBALTypes::TEXT, Schema::getColumnType($table_name, $col));
                     break;
                 case 'created_at':
                     $this->assertSame(DBALTypes::DATETIME_MUTABLE, Schema::getColumnType($table_name, $col));
