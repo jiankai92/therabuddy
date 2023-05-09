@@ -17,7 +17,7 @@ class CreateDbTablesTest extends TestCase
     private AiChat $chat_model;
     private array $db_columns;
 
-    private function tableDataProvider(): array
+    public static function tableDataProvider(): array
     {
         $provider_data = [];
         $models = [
@@ -42,6 +42,7 @@ class CreateDbTablesTest extends TestCase
     /**
      * Check if ai_chats table is created
      * @group database-setup
+     * @group requires-database
      * @dataProvider tableDataProvider
      */
     public function test_ai_chat_table_created($model): void
@@ -52,6 +53,7 @@ class CreateDbTablesTest extends TestCase
     /**
      * Check if ai_chats table is created with the required columns names
      * @group database-setup
+     * @group requires-database
      * @dataProvider tableDataProvider
      */
     public function test_ai_chat_columns_created($model, $model_columns): void

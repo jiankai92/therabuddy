@@ -26,6 +26,7 @@ class AiChatColumnTypeTest extends TestCase
     /**
      * Check if ai_chats table is created with the required column types
      * @group database-setup
+     * @group requires-database
      */
     public function test_created_ai_chat_columns_type(): void
     {
