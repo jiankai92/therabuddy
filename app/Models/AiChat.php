@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class AiChat extends Model
 {
@@ -16,4 +17,9 @@ class AiChat extends Model
     protected $fillable = ['user_id', 'session_id'];
 
     public $timestamps = false;
+
+    public function entries(): HasMany
+    {
+        return $this->hasMany(AiChatEntry::class, 'chat_id');
+    }
 }

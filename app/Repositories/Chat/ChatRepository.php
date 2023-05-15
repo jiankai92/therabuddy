@@ -7,9 +7,6 @@ use App\Models\AiChatEntry;
 
 class ChatRepository
 {
-    const TYPE_PROMPT = 'prompt';
-    const TYPE_RESPONSE = 'response';
-    
     public function storeMessageEntryAsUser()
     {
         // Check session or user id

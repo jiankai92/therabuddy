@@ -21,6 +21,22 @@
                     'time' => '10:12 AM, Today',
                     'message' => 'Are we meeting today? Project has been already finished and I have results to show you.'
                 ])
+                @foreach($chat_history as $entry)
+                    @switch($entry->type)
+                        @case(\App\Models\AiChatEntry::TYPE_PROMPT)
+                        @include('chat.partials.message-bubble', [
+                            'time' => $entry->created_at,
+                            'message' => $entry->message
+                        ])
+                        @break
+                        @case(\App\Models\AiChatEntry::TYPE_RESPONSE)
+                        @include('chat.partials.response-bubble', [
+                            'time' => $entry->created_at,
+                            'message' => $entry->message
+                        ])
+                        @default
+                    @endswitch
+                @endforeach
             </ul>
         </div> <!-- end chat-history -->
         <div class="chat-message clearfix p-7">
