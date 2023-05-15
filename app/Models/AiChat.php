@@ -14,4 +14,6 @@ class AiChat extends Model
     protected $hidden = ['created_at'];
 
     protected $fillable = ['user_id', 'session_id'];
+
+    public $timestamps = false;
 }

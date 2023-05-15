@@ -7,16 +7,19 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Services\Chat\ChatService;
 use App\Services\Ajax\AjaxResponseService;
+use App\Repositories\Chat\ChatRepository;
 
 class ChatController extends Controller
 {
     protected ChatService $chatService;
     protected AjaxResponseService $ajaxResponseService;
+    protected ChatRepository $chatRepository;
 
     public function __construct()
     {
         $this->chatService = new ChatService();
         $this->ajaxResponseService = new AjaxResponseService();
+        $this->chatRepository = new ChatRepository();
     }
 
     /**
@@ -80,7 +83,9 @@ class ChatController extends Controller
     {
         try {
             $input = $request->all();
+            $this->chatService->storeChat($input, $this->chatRepository::TYPE_PROMPT);
             $chat_response = $this->chatService->submitMessageAndGetResponse($input['message']);
+            $this->chatService->storeChat(['message' => $chat_response], $this->chatRepository::TYPE_RESPONSE);
             return $this->ajaxResponseService->setCode(200)->setBody($chat_response)->send();
         } catch (Exception $ex) {
             return $this->ajaxResponseService->setError($ex->getMessage(), 500)->send();

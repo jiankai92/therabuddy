@@ -15,4 +15,5 @@ class AiChatEntry extends Model
 
     protected $fillable = ['chat_id', 'type', 'message'];
     
+    public $timestamps = false;
 }
