@@ -25,13 +25,13 @@
                     @switch($entry->type)
                         @case(\App\Models\AiChatEntry::TYPE_PROMPT)
                         @include('chat.partials.message-bubble', [
-                            'time' => $entry->created_at,
+                            'time' => \Carbon\Carbon::parse($entry->created_at)->diffForHumans(),
                             'message' => $entry->message
                         ])
                         @break
                         @case(\App\Models\AiChatEntry::TYPE_RESPONSE)
                         @include('chat.partials.response-bubble', [
-                            'time' => $entry->created_at,
+                            'time' => \Carbon\Carbon::parse($entry->created_at)->diffForHumans(),
                             'message' => $entry->message
                         ])
                         @default
@@ -48,7 +48,7 @@
 
             <span class="chat-error text-red-700">&nbsp;</span>
             <button class="float-right border-0 uppercase text-base font-bold cursor-pointer">
-                <label for="message-to-send">Send</label>
+                <label class="cursor-pointer" for="message-to-send">Send</label>
             </button>
 
         </div> <!-- end chat-message -->
@@ -59,14 +59,14 @@
 
 <script id="message-template" type="text/template">
 @include('chat.partials.message-bubble', [
-    'time' => '${time}, Today',
+    'time' => '${time}',
     'message' => '${messageOutput}'
 ])
 </script>
 
 <script id="message-response-template" type="text/template">
 @include('chat.partials.response-bubble', [
-    'time' => '${time}, Today',
+    'time' => '${time}',
     'message' => '${response}'
 ])
 </script>
@@ -97,7 +97,7 @@
                     let template = document.querySelector("#message-template").innerHTML;
                     let context = {
                         messageOutput: this.messageToSend,
-                        time: this.getCurrentTime()
+                        time: '{{ \Carbon\Carbon::now()->diffForHumans() }}'
                     };
                     // Populate sender message and reset 
                     let renderedTemplate = this.compileTemplate(template, context);
@@ -112,7 +112,7 @@
                             let templateResponse = document.querySelector("#message-response-template").innerHTML;
                             let contextResponse = {
                                 response: chatResponse.data.body,
-                                time: this.getCurrentTime()
+                                time: '{{ \Carbon\Carbon::now()->diffForHumans() }}'
                             };
                             let renderedResponseTemplate = this.compileTemplate(templateResponse, contextResponse);
                             this.chatHistoryList.insertAdjacentHTML('beforeend', renderedResponseTemplate);
@@ -144,9 +144,6 @@
             scrollToBottom: function () {
                 var chatHistory = document.querySelector('.chat-history');
                 chatHistory.scrollTop = chatHistory.scrollHeight;
-            },
-            getCurrentTime: function () {
-                return new Date().toLocaleTimeString().replace(/([\d]+:[\d]{2})(:[\d]{2})(.*)/, "$1$3");
             },
             sendAndReceiveChatResponse: async function (message) {
                 return await axios.post('{{route('text-chat-submit')}}', {message: message})

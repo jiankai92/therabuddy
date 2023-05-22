@@ -90,9 +90,7 @@ class ChatController extends Controller
     {
         try {
             $input = $request->all();
-            $this->chatService->storeChat($input, AiChatEntry::TYPE_PROMPT);
-            $chat_response = $this->chatService->submitMessageAndGetResponse($input['message']);
-            $this->chatService->storeChat(['message' => $chat_response], AiChatEntry::TYPE_RESPONSE);
+            $chat_response = $this->chatService->processMessageSubmission($input['message']);
             return $this->ajaxResponseService->setCode(200)->setBody($chat_response)->send();
         } catch (Exception $ex) {
             return $this->ajaxResponseService->setError($ex->getMessage(), 500)->send();
