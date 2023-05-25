@@ -3,7 +3,6 @@
 
 namespace App\Services\Chat;
 
-use App\Models\AiChat;
 use App\Models\AiChatEntry;
 use App\Repositories\Chat\ChatRepository;
 use Exception;
@@ -13,13 +12,13 @@ class ChatService
 {
     protected OpenAiService $openAiService;
     protected ChatRepository $chatRepository;
-    
+
     public function __construct()
     {
         $this->openAiService = new OpenAiService();
         $this->chatRepository = new ChatRepository();
     }
-    
+
     /**
      * Stores user prompt, sends request to chat API endpoint, then stores and returns API response
      * @param string $message
@@ -30,10 +29,10 @@ class ChatService
     {
         try {
             DB::beginTransaction();
-            $chat_model = self::getChatModel();
-            self::storeChatEntry($chat_model, ['message' => $message], AiChatEntry::TYPE_PROMPT);
-            $chat_response = $this->openAiService->submitMessageToChatApi($message);
-            self::storeChatEntry($chat_model, ['message' => $chat_response], AiChatEntry::TYPE_RESPONSE);
+            $chat_model = $this->chatRepository->findOrCreateChatModel();
+            $this->chatRepository->storeChatEntry($chat_model, ['message' => $message], AiChatEntry::TYPE_PROMPT);
+            $chat_response = self::submitMessageToProviderAPI($message);
+            $this->chatRepository->storeChatEntry($chat_model, ['message' => $chat_response], AiChatEntry::TYPE_RESPONSE);
             DB::commit();
             return $chat_response;
         } catch (Exception $ex) {
@@ -43,41 +42,22 @@ class ChatService
     }
 
     /**
+     * Sends prompt to provider API endpoint and receive response
+     * @param $message
+     * @return string
+     */
+    public function submitMessageToProviderAPI($message): string
+    {
+        return $this->openAiService->submitMessageToChatApi($message);
+    }
+
+    /**
      * Test version of processMessageSubmission that simply returns a dummy response
      * @param string $message
-     * @return mixed
+     * @return string
      */
-    public function testProcessMessageSubmission(string $message): mixed
+    public function testProcessMessageSubmission(string $message): string
     {
         return $this->openAiService->returnDummyResponseData($message);
-    }
-
-    /**
-     * Finds users ai_chat entry or creates one if it doesn't exist
-     * @return mixed
-     * @throws Exception
-     */
-    private function getChatModel(): mixed
-    {
-        $model = $this->chatRepository->findOrCreateChatModel();
-        if (!$model->exists()) {
-            throw new Exception('Failed to find or create chat record');
-        }
-        return $model;
-    }
-
-    /**
-     * Stores new ai_chat_entry
-     * @param AiChat $chat_model
-     * @param $input
-     * @param $type
-     * @throws Exception
-     */
-    private function storeChatEntry(AiChat $chat_model, $input, $type)
-    {
-        $chat_entry = $this->chatRepository->storeChatEntry($chat_model, $input, $type);
-        if (!$chat_entry->exists()) {
-            throw new Exception('Failed to store chat Entry');
-        }
     }
 }
