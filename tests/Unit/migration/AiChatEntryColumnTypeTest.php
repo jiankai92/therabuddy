@@ -28,7 +28,7 @@ class AiChatEntryColumnTypeTest extends TestCase
      * @group database-setup
      * @group requires-database
      */
-    public function test_created_ai_chat_columns_type(): void
+    public function test_created_ai_chat_entry_columns_type(): void
     {
         $table_name = $this->chat_model->getTable();
         foreach (Schema::getColumnListing($table_name) as $col) {
