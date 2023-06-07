@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->id();
             $table->unsignedInteger('user_id')->nullable();
             $table->string('session_id')->nullable();
-            $table->timestamp('created_at')->useCurrent();
+            $table->timestamps(6);
             $table->index(['user_id']);
         });
     }

@@ -12,7 +12,7 @@ class AiChat extends Model
 
     protected $table = 'ai_chat';
 
-    protected $hidden = ['created_at'];
+    protected $hidden = ['created_at', 'updated_at'];
 
     protected $fillable = ['user_id', 'session_id'];
 

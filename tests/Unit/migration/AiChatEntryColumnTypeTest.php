@@ -46,6 +46,7 @@ class AiChatEntryColumnTypeTest extends TestCase
                     $this->assertSame(DBALTypes::TEXT, Schema::getColumnType($table_name, $col));
                     break;
                 case 'created_at':
+                case 'updated_at':
                     $this->assertSame(DBALTypes::DATETIME_MUTABLE, Schema::getColumnType($table_name, $col));
                     break;
                 default:
