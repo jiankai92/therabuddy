@@ -16,8 +16,6 @@ class AiChat extends Model
 
     protected $fillable = ['user_id', 'session_id'];
 
-    public $timestamps = false;
-
     public function entries(): HasMany
     {
         return $this->hasMany(AiChatEntry::class, 'chat_id');
