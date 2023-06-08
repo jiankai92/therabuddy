@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedInteger('chat_id');
             $table->string('type');
             $table->text('message');
-            $table->timestamp('created_at', 6)->useCurrent();
+            $table->timestamp('created_at', 6);
             $table->index(['chat_id']);
         });
     }

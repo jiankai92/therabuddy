@@ -21,6 +21,16 @@ class AiChatEntry extends Model
     
     public $timestamps = false;
 
+    public static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            // Handles auto inserting created_at
+            $model->created_at = now();
+        });
+    }
+
     public function entries(): BelongsTo
     {
         return $this->belongsTo(AiChatEntry::class, 'chat_id');
