@@ -4,7 +4,8 @@
 namespace App\Services\Chat;
 
 use App\Models\AiChatEntry;
-use App\Repositories\Chat\ChatRepository;
+use App\Repositories\ChatRepository;
+use App\Repositories\ChatEntryRepository;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -13,11 +14,13 @@ class ChatService
 {
     protected OpenAiService $openAiService;
     protected ChatRepository $chatRepository;
+    protected ChatEntryRepository $chatEntryRepository;
 
     public function __construct()
     {
         $this->openAiService = new OpenAiService();
         $this->chatRepository = new ChatRepository();
+        $this->chatEntryRepository = new ChatEntryRepository();
     }
 
     /**
@@ -35,9 +38,9 @@ class ChatService
             } else {
                 $chat_model = $this->chatRepository->findOrCreateChatModel(['session_id' => session()->getId()]);
             }
-            $this->chatRepository->storeChatEntry($chat_model, ['message' => $message], AiChatEntry::TYPE_PROMPT);
+            $this->chatEntryRepository->storeChatEntry($chat_model, ['message' => $message], AiChatEntry::TYPE_PROMPT);
             $chat_response = self::submitMessageToProviderAPI($message);
-            $this->chatRepository->storeChatEntry($chat_model, ['message' => $chat_response], AiChatEntry::TYPE_RESPONSE);
+            $this->chatEntryRepository->storeChatEntry($chat_model, ['message' => $chat_response], AiChatEntry::TYPE_RESPONSE);
             DB::commit();
             return $chat_response;
         } catch (Exception $ex) {

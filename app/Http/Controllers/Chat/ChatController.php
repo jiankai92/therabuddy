@@ -2,22 +2,24 @@
 
 namespace App\Http\Controllers\Chat;
 
+use App\Repositories\ChatRepository;
 use Exception;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\AiChat;
-use App\Models\AiChatEntry;
 use App\Services\Chat\ChatService;
 use App\Services\Ajax\AjaxResponseService;
+use Illuminate\Support\Facades\Auth;
 
 class ChatController extends Controller
 {
     protected ChatService $chatService;
+    protected ChatRepository $chatRepository;
     protected AjaxResponseService $ajaxResponseService;
 
     public function __construct()
     {
         $this->chatService = new ChatService();
+        $this->chatRepository = new ChatRepository();
         $this->ajaxResponseService = new AjaxResponseService();
     }
 
@@ -27,10 +29,12 @@ class ChatController extends Controller
     public function index()
     {
         try {
-            // TODO: find chat history based on userID is signed on, or session id 
-            $chat_model = AiChat::find(1);
+            if (Auth::check()) {
+                $chat_model = $this->chatRepository->findByUser(Auth::id());
+            } else {
+                $chat_model = $this->chatRepository->findBySession(session()->getId());
+            }
             $chat_history = $chat_model->entries;
-            // end TODO: find chat history based on userID is signed on, or session id
             return view('chat.index')->with('chat_history', $chat_history);
         } catch (Exception $ex) {
             // TODO: Log this error
