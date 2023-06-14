@@ -12,6 +12,10 @@
     <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet"/>
 </head>
 <body class="bg-[#c5ddeb]">
+@include('layouts.alerts')
+@include('layouts.header')
 @yield('content')
+@yield('scripts')
+@stack('scripts2')
 </body>
 </html>
