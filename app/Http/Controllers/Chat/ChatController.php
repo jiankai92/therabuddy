@@ -31,11 +31,12 @@ class ChatController extends Controller
             $chat_model = AiChat::find(1);
             $chat_history = $chat_model->entries;
             // end TODO: find chat history based on userID is signed on, or session id
+            return view('chat.index')->with('chat_history', $chat_history);
         } catch (Exception $ex) {
             // TODO: Log this error
             $chat_history = collect();
+            return view('chat.index')->with('chat_history', $chat_history)->withErrors([$ex->getMessage()]);
         }
-        return view('chat.index')->with('chat_history', $chat_history);
     }
 
     /**

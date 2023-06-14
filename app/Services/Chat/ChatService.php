@@ -6,6 +6,7 @@ namespace App\Services\Chat;
 use App\Models\AiChatEntry;
 use App\Repositories\Chat\ChatRepository;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class ChatService
@@ -22,14 +23,18 @@ class ChatService
     /**
      * Stores user prompt, sends request to chat API endpoint, then stores and returns API response
      * @param string $message
-     * @return mixed
+     * @return string
      * @throws Exception
      */
-    public function processMessageSubmission(string $message): mixed
+    public function processMessageSubmission(string $message): string
     {
         try {
             DB::beginTransaction();
-            $chat_model = $this->chatRepository->findOrCreateChatModel();
+            if (Auth::check()) {
+                $chat_model = $this->chatRepository->findOrCreateChatModel(['user_id' => Auth::id()]);
+            } else {
+                $chat_model = $this->chatRepository->findOrCreateChatModel(['session_id' => session()->getId()]);
+            }
             $this->chatRepository->storeChatEntry($chat_model, ['message' => $message], AiChatEntry::TYPE_PROMPT);
             $chat_response = self::submitMessageToProviderAPI($message);
             $this->chatRepository->storeChatEntry($chat_model, ['message' => $chat_response], AiChatEntry::TYPE_RESPONSE);

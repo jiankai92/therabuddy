@@ -8,37 +8,26 @@ use Exception;
 
 class ChatRepository
 {
-    public function storeMessageEntryAsUser()
+    public function findByUser(string $user_id)
     {
-        // Check session or user id
-
-        // find associated chat
-
-        // if found then store in messages column
-        // else create entry
+        return AiChat::where('user_id', $user_id)->first();
     }
 
-    public function storeMessageEntryAsGuest()
+    public function findBySession(string $session_id)
     {
-        // Check session or user id
-
-        // find associated chat
-
-        // if found then store in messages column
-        // else create entry
+        return AiChat::where('session_id', $session_id)->first();
     }
 
     /**
      * Finds users ai_chat entry or creates one if it doesn't exist
+     * @param array $condition
      * @return mixed
      * @throws Exception
      */
-    public function findOrCreateChatModel(): mixed
+    public function findOrCreateChatModel(array $condition): mixed
     {
         $model = AiChat::firstOrCreate(
-        // TODO: configure this to check user ID , followed by session ID
-            ['id' => 1],
-            // TODO: create with session ID or userID
+            $condition,
             []
         );
         if (!$model->exists()) {
