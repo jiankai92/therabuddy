@@ -1,4 +1,4 @@
-<div class="p-5 border-2 border-solid border-white clearfix">
+<div class="p-5 border-2 border-solid border-white clearfix fixed w-full bg-slate-100">
     <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/chat_avatar_01_green.jpg" alt="avatar"
          class="float-left"/>
     <div class="float-left pl-2.5 mt-1.5">
