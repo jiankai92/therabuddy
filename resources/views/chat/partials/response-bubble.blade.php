@@ -4,6 +4,6 @@
         <span class="text-xs">{{$time}}</span>
     </div>
     <div class="text-base text-white rounded bg-neutral-500 mb-7 p-5 leading-6 w-11/12">
-        {{ $message }}
+        {{ html_entity_decode($message) }}
     </div>
 </li>

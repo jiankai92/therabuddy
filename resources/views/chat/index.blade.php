@@ -5,13 +5,9 @@
             <div class="chat-history py-7 px-5">
                 <div class="h-28"></div>
                 <ul>
-                    @include('chat.partials.message-bubble', [
-                        'time' => '10:10 AM, Today',
-                        'message' => 'Hi Vincent, how are you? How is the project coming along?'
-                    ])
                     @include('chat.partials.response-bubble', [
-                        'time' => '10:12 AM, Today',
-                        'message' => 'Are we meeting today? Project has been already finished and I have results to show you.'
+                        'time' => '',
+                        'message' => 'Hi there, I\'m Therabuddy and I\'m always here if you need someone to express yourself to &#x1f60a;'
                     ])
                     @foreach($chat_history as $entry)
                         @switch($entry->type)

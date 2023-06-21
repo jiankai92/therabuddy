@@ -1,9 +1,9 @@
 <div class="p-5 border-2 border-solid border-white clearfix fixed w-full bg-slate-100">
-    <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/chat_avatar_01_green.jpg" alt="avatar"
-         class="float-left"/>
+    <img src="/images/logo/therabuddy-logo-A.png" alt="avatar"
+         class="float-left max-w-[60px]"/>
     <div class="float-left pl-2.5 mt-1.5">
         <div class="chat-with font-bold text-base">Therabuddy</div>
-        <div class="chat-num-messages">already 1 902 messages</div>
+        <div class="chat-num-messages">Talk to me about anything &#x1f60a;</div>
     </div>
     <i class="fa fa-star"></i>
     @if (Route::has('login'))
