@@ -49,17 +49,17 @@
 
 @section('scripts')
     <script id="message-template" type="text/template">
-@include('chat.partials.message-bubble', [
-    'time' => '${time}',
-    'message' => '${messageOutput}'
-])
+    @include('chat.partials.message-bubble', [
+        'time' => '${time}',
+        'message' => '${messageOutput}'
+    ])
     </script>
 
-    <script id="message-response-template" type="text/template">
-@include('chat.partials.response-bubble', [
-    'time' => '${time}',
-    'message' => '${response}'
-])
+    <script id="response-template" type="text/template">
+    @include('chat.partials.response-bubble', [
+        'time' => '${time}',
+        'message' => '${response}'
+    ])
     </script>
     <script type="module">
         (function () {
@@ -100,7 +100,7 @@
                         try {
                             let chatResponse = await this.sendAndReceiveChatResponse(this.messageToSend);
                             if (chatResponse.data.code === 200) {
-                                let templateResponse = document.querySelector("#message-response-template").innerHTML;
+                                let templateResponse = document.querySelector("#response-template").innerHTML;
                                 let contextResponse = {
                                     response: chatResponse.data.body,
                                     time: '{{ \Carbon\Carbon::now()->diffForHumans() }}'
