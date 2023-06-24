@@ -133,8 +133,11 @@
                     }
                 },
                 scrollToBottom: function () {
-                    var chatHistory = document.querySelector('.chat-history');
-                    chatHistory.scrollTop = chatHistory.scrollHeight;
+                    let chatHistory = document.querySelector('.chat-history');
+                    window.scrollTo({
+                        top: chatHistory.scrollHeight,
+                        behavior: 'smooth'
+                    });
                 },
                 sendAndReceiveChatResponse: async function (message) {
                     return await axios.post('{{route('text-chat-submit')}}', {message: message})
