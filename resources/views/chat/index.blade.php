@@ -36,7 +36,7 @@
                 <i class="fa fa-file-image-o"></i>
 
                 <span class="chat-error text-red-700">&nbsp;</span>
-                <button class="float-right border-0 uppercase text-base font-bold cursor-pointer">
+                <button id="btn-send-msg" class="float-right border-0 uppercase text-base font-bold cursor-pointer">
                     <label class="cursor-pointer" for="message-to-send">Send</label>
                 </button>
 
@@ -72,17 +72,18 @@
                 },
                 cacheDOM: function () {
                     this.chatHistory = document.querySelector('.chat-history');
-                    this.button = document.querySelector('button');
-                    this.textarea = document.querySelector('#message-to-send');
+                    this.sendButton = document.querySelector('#btn-send-msg');
+                    this.chatBox = document.querySelector('#message-to-send');
                     this.chatHistoryList = this.chatHistory.querySelector('ul');
                 },
                 bindEvents: function () {
-                    this.button.addEventListener('click', this.addMessage.bind(this));
-                    this.textarea.addEventListener('keydown', this.addMessageEnter.bind(this));
+                    this.sendButton.addEventListener('click', this.addMessage.bind(this));
+                    this.chatBox.addEventListener('keydown', this.addMessageEnter.bind(this));
                 },
                 render: async function () {
                     this.scrollToBottom();
                     if (this.messageToSend.trim() !== '') {
+                        this.disableChatBox(true);
                         this.toggleErrorState(false);
                         // Get message content
                         let template = document.querySelector("#message-template").innerHTML;
@@ -94,7 +95,7 @@
                         let renderedTemplate = this.compileTemplate(template, context);
                         this.chatHistoryList.insertAdjacentHTML('beforeend', renderedTemplate);
                         this.scrollToBottom();
-                        this.textarea.value = '';
+                        this.chatBox.value = '';
 
                         // responses
                         try {
@@ -111,8 +112,10 @@
                             } else {
                                 this.toggleErrorState(true);
                             }
+                            this.disableChatBox(false);
                         } catch (e) {
                             this.toggleErrorState(true);
+                            this.disableChatBox(false);
                         }
                     }
                 },
@@ -122,7 +125,7 @@
                     });
                 },
                 addMessage: function () {
-                    this.messageToSend = this.textarea.value;
+                    this.messageToSend = this.chatBox.value;
                     this.render();
                 },
                 addMessageEnter: function (event) {
@@ -173,6 +176,15 @@
                             "focus-visible:border-solid",
                             "focus-visible:border-red-700",
                         );
+                    }
+                },
+                disableChatBox: function (disable) {
+                    if (disable) {
+                        this.sendButton.disabled = true;
+                        this.chatBox.disabled = true;
+                    } else {
+                        this.sendButton.disabled = false;
+                        this.chatBox.disabled = false;
                     }
                 }
             };
