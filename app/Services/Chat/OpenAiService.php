@@ -6,7 +6,6 @@ namespace App\Services\Chat;
 use App\Http\Resources\Chat\ChatDummyResponseResource;
 use GuzzleHttp\Client;
 use App\Http\Resources\Chat\ChatRequestResource;
-use Illuminate\Support\Facades\Log;
 
 class OpenAiService
 {
