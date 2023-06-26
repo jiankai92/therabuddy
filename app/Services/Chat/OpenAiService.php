@@ -54,12 +54,12 @@ class OpenAiService
             ],
         ];
         $request_body = collect(new ChatRequestResource($request_data))->toJson();
-        Log::notice('Outgoing: ' . $request_body);
+        writeToLog(__FILE__, __LINE__, "Outgoing: \n" . $request_body, 'notice', 'openai');
         $response = $client->post($endpoint, [
             'body' => "$request_body"
         ]);
         $response_content = $response->getBody()->getContents();
-        Log::notice('Incoming: ' . print_r($response_content, 1));
+        writeToLog(__FILE__, __LINE__, "Incoming: \n" . $response_content, 'notice', 'openai');
         $response_content = json_decode($response_content, true);
         return $response_content['choices'][0]['message']['content'];
     }

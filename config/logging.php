@@ -53,7 +53,7 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['single'],
+            'channels' => ['daily'],
             'ignore_exceptions' => false,
         ],
 
@@ -67,7 +67,24 @@ return [
             'driver' => 'daily',
             'path' => storage_path('logs/laravel.log'),
             'level' => env('LOG_LEVEL', 'debug'),
-            'days' => 14,
+        ],
+
+        'error' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/errors/error.log'),
+            'level' => 'error',
+        ],
+        
+        'notice' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/notices/notice.log'),
+            'level' => 'notice',
+        ],
+
+        'openai' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/openai/openai.log'),
+            'level' => 'notice',
         ],
 
         'slack' => [

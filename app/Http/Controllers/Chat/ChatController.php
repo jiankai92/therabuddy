@@ -34,10 +34,10 @@ class ChatController extends Controller
             } else {
                 $chat_model = $this->chatRepository->findBySession(session()->getId());
             }
-            $chat_history = $chat_model->entries;
+            $chat_history = $chat_model?->entries ?? collect();
             return view('chat.index')->with('chat_history', $chat_history);
         } catch (Exception $ex) {
-            // TODO: Log this error
+            writeToLog($ex->getFile(), $ex->getLine(), $ex->getMessage(), 'error', 'error');
             $chat_history = collect();
             return view('chat.index')->with('chat_history', $chat_history)->withErrors([$ex->getMessage()]);
         }
@@ -98,6 +98,7 @@ class ChatController extends Controller
             $chat_response = $this->chatService->processMessageSubmission($input['message']);
             return $this->ajaxResponseService->setCode(200)->setBody($chat_response)->send();
         } catch (Exception $ex) {
+            writeToLog($ex->getFile(), $ex->getLine(), $ex->getMessage(), 'error');
             return $this->ajaxResponseService->setError($ex->getMessage(), 500)->send();
         }
     }
