@@ -67,7 +67,6 @@ class OpenAiService
     public function returnDummyResponseData(string $message)
     {
         $response = collect(new ChatDummyResponseResource($message))->toArray();
-        Log::notice('Incoming: ' . print_r($response, 1));
         return $response['choices'][0]['message']['content'];
     }
 }
