@@ -26,9 +26,9 @@
                         @endswitch
                     @endforeach
                 </ul>
-                <div class="h-36"></div>
+                <div class="h-28"></div>
             </div> <!-- end chat-history -->
-            <div class="chat-message clearfix p-7 fixed w-full bottom-0 bg-slate-100">
+            <div class="chat-message clearfix p-4 fixed w-full bottom-0 bg-slate-100">
             <textarea name="message-to-send" id="message-to-send"
                       placeholder="Type your message" rows="3"
                       class="w-full px-5 py-2 text-sm mb-2 rounded"></textarea>
