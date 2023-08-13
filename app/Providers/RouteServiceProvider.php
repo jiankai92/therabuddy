@@ -20,6 +20,15 @@ class RouteServiceProvider extends ServiceProvider
     public const HOME = '/dashboard';
     
     /**
+     * The path to the "home" route for your application.
+     *
+     * Typically, users are redirected here after authentication.
+     *
+     * @var string
+     */
+    public const CHAT = '/chat';
+    
+    /**
      * This namespace is applied to your controller routes.
      *
      * In addition, it is set as the URL generator's root namespace.

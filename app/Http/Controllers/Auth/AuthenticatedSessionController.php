@@ -29,7 +29,19 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(RouteServiceProvider::HOME);
+        return redirect(RouteServiceProvider::CHAT)->with('success', 'User Login Successfully');
+    }
+
+    /**
+     * Redirect after authenticated request.
+     */
+    public function ajaxLoginRedirect(): RedirectResponse
+    {
+        if (Auth::user()) {
+            return redirect(RouteServiceProvider::CHAT)->with('success', 'User Login Successfully');
+        } else {
+            return redirect(RouteServiceProvider::HOME);
+        }
     }
 
     /**
@@ -43,6 +55,6 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect(RouteServiceProvider::CHAT)->with('notice', 'User Logout Successfully');
     }
 }

@@ -13,6 +13,9 @@ module.exports = {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
+            colors: {
+                'tb-primary': '#78c1c5',
+            },
         },
     },
 

@@ -6,26 +6,38 @@
         </div>
         <x-auth-session-status class="mb-4" :status="session('status')"/>
 
-        <form method="POST" action="{{ route('login') }}">
+        <form method="POST" x-data="modalLoginForm()" @submit.prevent="modalLogin">
         @csrf
         <!-- Email Address -->
             <div>
-                <x-input-label for="email" :value="__('Email')"/>
-                <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')"
-                              required autofocus autocomplete="username"/>
-                <x-input-error :messages="$errors->get('email')" class="mt-2"/>
+                <x-input-label for="emailLogin" :value="__('Email')"/>
+                <x-text-input id="emailLogin" class="block mt-1 w-full" type="email" name="emailLogin" :value="old('email')"
+                              required autofocus autocomplete="username" x-model="formData.emailLogin"/>
+                <template x-if="formErrors.email && formErrors.email.length > 0">
+                    <template x-for="item in formErrors.email">
+                        <ul {{ $attributes->merge(['class' => 'text-sm text-red-600 space-y-1 mt-2']) }}>
+                            <li x-text="item"></li>
+                        </ul>
+                    </template>
+                </template>
             </div>
 
             <!-- Password -->
             <div class="mt-4">
-                <x-input-label for="password" :value="__('Password')"/>
+                <x-input-label for="passwordLogin" :value="__('Password')"/>
 
-                <x-text-input id="password" class="block mt-1 w-full"
+                <x-text-input id="passwordLogin" class="block mt-1 w-full"
                               type="password"
-                              name="password"
+                              name="passwordLogin"
+                              x-model="formData.passwordLogin"
                               required autocomplete="current-password"/>
-
-                <x-input-error :messages="$errors->get('password')" class="mt-2"/>
+                <template x-if="formErrors.password && formErrors.password.length > 0">
+                    <template x-for="item in formErrors.password">
+                        <ul {{ $attributes->merge(['class' => 'text-sm text-red-600 space-y-1 mt-2']) }}>
+                            <li x-text="item"></li>
+                        </ul>
+                    </template>
+                </template>
             </div>
 
             <!-- Remember Me -->
@@ -55,3 +67,34 @@
         </form>
     </div>
 </x-modal>
+@push('scripts2')
+    <script>
+        function modalLoginForm() {
+            return {
+                formData: {
+                    emailLogin: '',
+                    passwordLogin: ''
+                },
+                formErrors: {
+                    email: '',
+                    password: ''
+                },
+                modalLogin() {
+                    let data = {
+                        email: this.formData.emailLogin,
+                        password: this.formData.passwordLogin
+                    }
+                    axios.post('{{route('login')}}', data)
+                        .then((response) => {
+                            window.location = '/login-ajax/redirect'
+                        }, (error) => {
+                            if (error.response.status === 422) {
+                                this.formErrors = error.response.data.errors
+                            }
+                        })
+                        .catch()
+                },
+            };
+        }
+    </script>
+@endpush

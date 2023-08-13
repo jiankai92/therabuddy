@@ -56,4 +56,7 @@ Route::middleware('auth')->group(function () {
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
                 ->name('logout');
+
+    Route::get('login-ajax/redirect', [AuthenticatedSessionController::class, 'ajaxLoginRedirect'])
+        ->name('login-ajax.redirect');
 });

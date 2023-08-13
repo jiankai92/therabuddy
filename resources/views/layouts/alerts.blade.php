@@ -1,41 +1,29 @@
 @php
+    $alerts = collect();
     if (session('errors')) {
-        $errors = session('errors');
+        $alerts->errors = session('errors');
     }
     if (session('error')) {
-        $error = session('error');
+        $alerts->error = session('error');
     }
-    if (session('message')) {
-        $message = session('message');
+    if (session('notice')) {
+        $alerts->notice = session('notice');
     }
     if (session('success')) {
-        $success = session('success');
+        $alerts->success = session('success');
     }
 @endphp
-
-@if ( isset($error) )
-    <div class="alert alert-danger">
-        {!! nl2br($error) !!}
-    </div>
+@if ( isset($alerts->error) )
+    <x-alerts type="{{\App\View\Components\Alerts::TYPE['ERROR']}}" :body="$alerts->error"></x-alerts>
 @endif
 
-@if ( isset($message) )
-    <div class="alert alert-info">
-        {!! nl2br($message) !!}
-    </div>
-@endif
-@if ( isset($success) )
-    <div class="alert alert-success">
-        {!! nl2br($success) !!}
-    </div>
+@if ( isset($alerts->errors) )
+    <x-alerts type="{{\App\View\Components\Alerts::TYPE['ERROR']}}" :body="$alerts->errors"></x-alerts>
 @endif
 
-@if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $err)
-                <li>{{ $err }}</li>
-            @endforeach
-        </ul>
-    </div>
+@if ( isset($alerts->notice) )
+    <x-alerts type="{{\App\View\Components\Alerts::TYPE['NOTICE']}}" :body="$alerts->notice"></x-alerts>
+@endif
+@if ( isset($alerts->success) )
+    <x-alerts type="{{\App\View\Components\Alerts::TYPE['SUCCESS']}}" :body="$alerts->success"></x-alerts>
 @endif
