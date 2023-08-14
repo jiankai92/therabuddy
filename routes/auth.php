@@ -59,4 +59,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('login-ajax/redirect', [AuthenticatedSessionController::class, 'ajaxLoginRedirect'])
         ->name('login-ajax.redirect');
+    
+    Route::get('register-ajax/redirect', [RegisteredUserController::class, 'ajaxRedirect'])
+        ->name('register-ajax.redirect');
 });

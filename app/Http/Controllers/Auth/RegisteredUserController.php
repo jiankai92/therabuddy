@@ -31,7 +31,7 @@ class RegisteredUserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'min:4', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
@@ -47,5 +47,14 @@ class RegisteredUserController extends Controller
         Auth::login($user);
 
         return redirect(RouteServiceProvider::CHAT)->with('success','User Registered Successfully');
+    }
+
+    public function ajaxRedirect(): RedirectResponse
+    {
+        if (Auth::user()) {
+            return redirect(RouteServiceProvider::CHAT)->with('success', 'User Registered Successfully');
+        } else {
+            return redirect(RouteServiceProvider::HOME);
+        }
     }
 }

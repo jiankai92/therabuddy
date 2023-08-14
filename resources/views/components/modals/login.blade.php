@@ -13,13 +13,7 @@
                 <x-input-label for="emailLogin" :value="__('Email')"/>
                 <x-text-input id="emailLogin" class="block mt-1 w-full" type="email" name="emailLogin" :value="old('email')"
                               required autofocus autocomplete="username" x-model="formData.emailLogin"/>
-                <template x-if="formErrors.email && formErrors.email.length > 0">
-                    <template x-for="item in formErrors.email">
-                        <ul {{ $attributes->merge(['class' => 'text-sm text-red-600 space-y-1 mt-2']) }}>
-                            <li x-text="item"></li>
-                        </ul>
-                    </template>
-                </template>
+                <x-input-error-ajax fields="formErrors.email" />
             </div>
 
             <!-- Password -->
@@ -31,13 +25,7 @@
                               name="passwordLogin"
                               x-model="formData.passwordLogin"
                               required autocomplete="current-password"/>
-                <template x-if="formErrors.password && formErrors.password.length > 0">
-                    <template x-for="item in formErrors.password">
-                        <ul {{ $attributes->merge(['class' => 'text-sm text-red-600 space-y-1 mt-2']) }}>
-                            <li x-text="item"></li>
-                        </ul>
-                    </template>
-                </template>
+                <x-input-error-ajax fields="formErrors.password" />
             </div>
 
             <!-- Remember Me -->
@@ -57,6 +45,10 @@
                         {{ __('Forgot password?') }}
                     </a>
                 @endif
+                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 cursor-pointer ml-2"
+                   @click.prevent="$dispatch('close');$dispatch('open-modal', 'register')">
+                    {{ __('Dont have an account?') }}
+                </a>
                 <x-secondary-button class="ml-3" x-on:click="$dispatch('close')">
                     {{ __('Cancel') }}
                 </x-secondary-button>
@@ -80,6 +72,7 @@
                     password: ''
                 },
                 modalLogin() {
+                    this.clearError();
                     let data = {
                         email: this.formData.emailLogin,
                         password: this.formData.passwordLogin
@@ -94,6 +87,12 @@
                         })
                         .catch()
                 },
+                clearError() {
+                    this.formErrors = {
+                        email: '',
+                        password: ''
+                    }
+                }
             };
         }
     </script>
