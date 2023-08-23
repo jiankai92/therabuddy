@@ -5,29 +5,9 @@
         <div class="chat-with font-bold text-base">Therabuddy</div>
         <div class="chat-num-messages">Talk to me about anything &#x1f60a;</div>
     </div>
-    <i class="fa fa-star"></i>
     @if (Route::has('login'))
-        <div class="p-6 text-right sm:top-0 sm:right-0">
-            @auth
-                <a href="{{ url('/dashboard') }}"
-                   class="font-bold hover:text-tb-primary dark:hover:text-tb-primary focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Dashboard</a>
-                <form method="POST" class="inline-flex" action="{{ route('logout') }}">
-                    @csrf
-                    <a class="font-bold hover:text-tb-primary dark:hover:text-tb-primary focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500 ml-2 cursor-pointer"
-                       onclick="event.preventDefault();this.closest('form').submit();">Logout</a>
-                </form>
-            @else
-                <a x-data @click.prevent="$dispatch('open-modal', 'login')"
-                   class="font-bold hover:text-tb-primary dark:hover:text-tb-primary focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500 cursor-pointer">
-                    Log in
-                </a>
-
-                @if (Route::has('register'))
-                    <a x-data @click.prevent="$dispatch('open-modal', 'register')"
-                       class="ml-4 font-bold text-base dark:hover:text-tb-primary focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500 cursor-pointer">Register</a>
-                @endif
-            @endauth
-        </div>
+        <x-header.nav></x-header.nav>
+        <x-header.nav-mobile></x-header.nav-mobile>
     @endif
 </div> <!-- end chat-header -->
 <x-modals.register></x-modals.register>
