@@ -1,49 +1,42 @@
 @extends('base')
 @section('content')
     <div class="mx-auto my-0 rounded clearfix">
-        <div class="bg-slate-100">
-            <div class="chat-history py-7 px-5">
-                <div class="h-28"></div>
-                <ul>
-                    @include('chat.partials.response-bubble', [
-                        'time' => '',
-                        'message' => 'Hi there, I\'m Therabuddy and I\'m always here if you need someone to express yourself to &#x1f60a;'
-                    ])
-                    @foreach($chat_history as $entry)
-                        @switch($entry->type)
-                            @case(\App\Models\AiChatEntry::TYPE_PROMPT)
-                            @include('chat.partials.message-bubble', [
-                                'time' => \Carbon\Carbon::parse($entry->created_at)->diffForHumans(),
-                                'message' => $entry->message
-                            ])
-                            @break
-                            @case(\App\Models\AiChatEntry::TYPE_RESPONSE)
-                            @include('chat.partials.response-bubble', [
-                                'time' => \Carbon\Carbon::parse($entry->created_at)->diffForHumans(),
-                                'message' => $entry->message
-                            ])
-                            @default
-                        @endswitch
-                    @endforeach
-                </ul>
-                <div class="h-28"></div>
-            </div> <!-- end chat-history -->
-            <div class="chat-message clearfix p-4 fixed w-full bottom-0 bg-slate-100">
+        <div class="chat-history py-7 px-5">
+            <ul>
+                @include('chat.partials.response-bubble', [
+                    'time' => '',
+                    'message' => 'Hi there, I\'m Therabuddy and I\'m always here if you need someone to express yourself to &#x1f60a;'
+                ])
+                @foreach($chat_history as $entry)
+                    @switch($entry->type)
+                        @case(\App\Models\AiChatEntry::TYPE_PROMPT)
+                        @include('chat.partials.message-bubble', [
+                            'time' => \Carbon\Carbon::parse($entry->created_at)->diffForHumans(),
+                            'message' => $entry->message
+                        ])
+                        @break
+                        @case(\App\Models\AiChatEntry::TYPE_RESPONSE)
+                        @include('chat.partials.response-bubble', [
+                            'time' => \Carbon\Carbon::parse($entry->created_at)->diffForHumans(),
+                            'message' => $entry->message
+                        ])
+                        @default
+                    @endswitch
+                @endforeach
+            </ul>
+            <div class="h-28"></div>
+        </div> <!-- end chat-history -->
+        <div class="chat-message clearfix p-4 fixed w-full bottom-0 bg-slate-100">
             <textarea name="message-to-send" id="message-to-send"
                       placeholder="Type your message" rows="3"
                       class="w-full px-5 py-2 text-sm mb-2 rounded"></textarea>
-                <i class="fa fa-file-o"></i>
-                <i class="fa fa-file-image-o"></i>
-
-                <span class="chat-error text-red-700">&nbsp;</span>
-                <button id="btn-send-msg" class="float-right border-0 uppercase text-base font-bold cursor-pointer">
-                    <label class="cursor-pointer" for="message-to-send">Send</label>
-                </button>
-
-            </div> <!-- end chat-message -->
-
-        </div> <!-- end chat -->
-
+            <!--<i class="fa fa-file-o"></i>
+            <i class="fa fa-file-image-o"></i>-->
+            <span class="chat-error text-red-700">&nbsp;</span>
+            <button id="btn-send-msg" class="float-right border-0 uppercase text-base font-bold cursor-pointer">
+                <label class="cursor-pointer" for="message-to-send">Send</label>
+            </button>
+        </div> <!-- end chat-message -->
     </div> <!-- end container -->
 @endsection
 
