@@ -12,13 +12,17 @@ class Alerts extends Component
         'ERROR' => 'error',
         'SUCCESS' => 'success',
         'NOTICE' => 'notice',
+        'WARNING' => 'warning'
     ];
+    
+    private bool $persist;
+
     /**
      * Create a new component instance.
      */
     public function __construct(public string $type, public mixed $body)
     {
-        //
+        $this->persist = $this->persistence();
     }
 
     /**
@@ -26,6 +30,17 @@ class Alerts extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.alerts');
+        return view('components.alerts', [
+                'persist' => $this->persist
+            ]
+        );
+    }
+
+    private function persistence(): bool
+    {
+        return match ($this->type) {
+            self::TYPE['SUCCESS'], self::TYPE['NOTICE'] => false,
+            default => true
+        };
     }
 }

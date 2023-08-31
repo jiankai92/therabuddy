@@ -2,12 +2,9 @@
     $class_list = match ($type) {
         \App\View\Components\Alerts::TYPE['SUCCESS'] => 'bg-green-500',
         \App\View\Components\Alerts::TYPE['ERROR'] => 'bg-red-500',
+        \App\View\Components\Alerts::TYPE['WARNING'] => 'bg-orange-400',
         default => 'bg-blue-500'
     };
-    $persist = match ($type) {
-        \App\View\Components\Alerts::TYPE['SUCCESS'], \App\View\Components\Alerts::TYPE['NOTICE'] => false,
-        default => true
-    }
 @endphp
 <template x-data="{ show: true }" x-if="show">
     <div x-data="{}" x-ref="alert" @if(!$persist) x-init="fadeOut($refs.alert)" @endif 
