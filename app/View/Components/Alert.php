@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class Alerts extends Component
+class Alert extends Component
 {
     const TYPE = [
         'ERROR' => 'error',
@@ -30,7 +30,7 @@ class Alerts extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.alerts', [
+        return view('components.alert', [
                 'persist' => $this->persist
             ]
         );

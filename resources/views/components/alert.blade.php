@@ -1,8 +1,8 @@
 @php
     $class_list = match ($type) {
-        \App\View\Components\Alerts::TYPE['SUCCESS'] => 'bg-green-500',
-        \App\View\Components\Alerts::TYPE['ERROR'] => 'bg-red-500',
-        \App\View\Components\Alerts::TYPE['WARNING'] => 'bg-orange-400',
+        \App\View\Components\Alert::TYPE['SUCCESS'] => 'bg-green-500',
+        \App\View\Components\Alert::TYPE['ERROR'] => 'bg-red-500',
+        \App\View\Components\Alert::TYPE['WARNING'] => 'bg-orange-400',
         default => 'bg-blue-500'
     };
 @endphp
