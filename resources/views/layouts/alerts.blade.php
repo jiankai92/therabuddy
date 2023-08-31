@@ -17,18 +17,17 @@
     }
 @endphp
 @if ( isset($alerts->success) )
-    <x-alerts type="{{\App\View\Components\Alert::TYPE['SUCCESS']}}" :body="$alerts->success"></x-alerts>
+    <x-alert type="{{\App\View\Components\Alert::TYPE['SUCCESS']}}" :body="$alerts->success"></x-alert>
 @endif
 @if ( isset($alerts->notice) )
-    <x-alerts type="{{\App\View\Components\Alert::TYPE['NOTICE']}}" :body="$alerts->notice"></x-alerts>
+    <x-alert type="{{\App\View\Components\Alert::TYPE['NOTICE']}}" :body="$alerts->notice"></x-alert>
 @endif
 @if ( isset($alerts->warning) )
-    <x-alerts type="{{\App\View\Components\Alert::TYPE['WARNING']}}" :body="$alerts->warning"></x-alerts>
+    <x-alert type="{{\App\View\Components\Alert::TYPE['WARNING']}}" :body="$alerts->warning"></x-alert>
 @endif
 @if ( isset($alerts->error) )
-    <x-alerts type="{{\App\View\Components\Alert::TYPE['ERROR']}}" :body="$alerts->error"></x-alerts>
+    <x-alert type="{{\App\View\Components\Alert::TYPE['ERROR']}}" :body="$alerts->error"></x-alert>
 @endif
-
 @if ( isset($alerts->errors) )
-    <x-alerts type="{{\App\View\Components\Alert::TYPE['ERROR']}}" :body="$alerts->errors"></x-alerts>
+    <x-alert type="{{\App\View\Components\Alert::TYPE['ERROR']}}" :body="$alerts->errors"></x-alert>
 @endif
