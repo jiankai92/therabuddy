@@ -36,12 +36,15 @@ class ChatService
     public function processMessageSubmission(string $message): string
     {
         try {
-            DB::beginTransaction();
             if (Auth::check()) {
                 $chat_model = $this->chatRepository->findOrCreateChatModel(['user_id' => Auth::id()]);
             } else {
                 $chat_model = $this->chatRepository->findOrCreateChatModel(['session_id' => session()->getId()]);
             }
+            if (!$chat_model->validSession()) {
+                throw new Exception('Invalid Session. Please refresh page and try again');
+            }
+            DB::beginTransaction();
             $this->chatEntryRepository->storeChatEntry($chat_model, ['message' => $message], AiChatEntry::TYPE_PROMPT);
             $chat_response = self::submitMessageToProviderAPI($message);
             $this->chatEntryRepository->storeChatEntry($chat_model, ['message' => $chat_response], AiChatEntry::TYPE_RESPONSE);

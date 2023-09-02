@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Auth;
 
 class AiChat extends Model
 {
@@ -30,5 +31,13 @@ class AiChat extends Model
     public function guestSessionExpired(): bool
     {
         return $this->guestSessionTtl() <= 0;
+    }
+
+    public function validSession(): bool
+    {
+        if (!Auth::user()) {
+            return $this->session_id == session()->getId();
+        }
+        return true;
     }
 }
