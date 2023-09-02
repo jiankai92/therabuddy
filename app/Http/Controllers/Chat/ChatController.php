@@ -32,7 +32,7 @@ class ChatController extends Controller
             if (Auth::check()) {
                 $chat_model = $this->chatRepository->findByUser(Auth::id());
             } else {
-                $chat_model = $this->chatRepository->findBySession(session()->getId());
+                $chat_model = $this->chatService->processGuestSession(session()->getId());
             }
             $chat_history = $chat_model?->entries ?? collect();
             return view('chat.index')->with('chat_history', $chat_history);

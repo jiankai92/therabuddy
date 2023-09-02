@@ -10,7 +10,7 @@
         $alerts->notice = session('notice');
     }
     if (session('warning')) {
-        $alerts->success = session('warning');
+        $alerts->warning = session('warning');
     }
     if (session('success')) {
         $alerts->success = session('success');

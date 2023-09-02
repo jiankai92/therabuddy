@@ -15,12 +15,16 @@ class ChatService
     protected OpenAiService $openAiService;
     protected ChatRepository $chatRepository;
     protected ChatEntryRepository $chatEntryRepository;
+    private int $warnExpireBuffer;
+
+    const WARN_EXPIRE_BUFFER = 60;
 
     public function __construct()
     {
         $this->openAiService = new OpenAiService();
         $this->chatRepository = new ChatRepository();
         $this->chatEntryRepository = new ChatEntryRepository();
+        $this->warnExpireBuffer = env('SESSION_LIFETIME') >= self::WARN_EXPIRE_BUFFER ? self::WARN_EXPIRE_BUFFER : intval(env('SESSION_LIFETIME')); // time remaining on session before warning shown
     }
 
     /**
@@ -67,5 +71,25 @@ class ChatService
     public function testProcessMessageSubmission(string $message): string
     {
         return $this->openAiService->returnDummyResponseData($message);
+    }
+
+    /**
+     * Process Non logged in user session. Session starts when user submits their first message
+     * @param string $session_id
+     * @return AiChat | null $chat_model 
+     */
+    public function processGuestSession(string $session_id): \App\Models\AiChat | null
+    {
+        $chat_model = $this->chatRepository->findBySession($session_id);
+        if (!$chat_model) {
+            return $chat_model;
+        }
+        $session_ttl = $chat_model->guestSessionTtl();
+        
+        if ($session_ttl <= $this->warnExpireBuffer) {
+            $warn_message = 'Your session will expire in ' . $session_ttl . ' minutes. Please register an account to save your current chat history.';
+            session()->now('warning',$warn_message);
+        }
+        return $chat_model;
     }
 }
