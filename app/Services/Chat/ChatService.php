@@ -15,16 +15,14 @@ class ChatService
     protected OpenAiService $openAiService;
     protected ChatRepository $chatRepository;
     protected ChatEntryRepository $chatEntryRepository;
-    private int $warnExpireBuffer;
-
-    const WARN_EXPIRE_BUFFER = 60;
+    protected SessionService $sessionService;
 
     public function __construct()
     {
         $this->openAiService = new OpenAiService();
         $this->chatRepository = new ChatRepository();
         $this->chatEntryRepository = new ChatEntryRepository();
-        $this->warnExpireBuffer = env('SESSION_LIFETIME') >= self::WARN_EXPIRE_BUFFER ? self::WARN_EXPIRE_BUFFER : intval(env('SESSION_LIFETIME')); // time remaining on session before warning shown
+        $this->sessionService = new SessionService();
     }
 
     /**
@@ -41,9 +39,7 @@ class ChatService
             } else {
                 $chat_model = $this->chatRepository->findOrCreateChatModel(['session_id' => session()->getId()]);
             }
-            if (!$chat_model->validSession()) {
-                throw new Exception('Invalid Session. Please refresh page and try again');
-            }
+            $this->sessionService->validate($chat_model);
             DB::beginTransaction();
             $this->chatEntryRepository->storeChatEntry($chat_model, ['message' => $message], AiChatEntry::TYPE_PROMPT);
             $chat_response = self::submitMessageToProviderAPI($message);
@@ -87,12 +83,7 @@ class ChatService
         if (!$chat_model) {
             return $chat_model;
         }
-        $session_ttl = $chat_model->guestSessionTtl();
-        
-        if ($session_ttl <= $this->warnExpireBuffer) {
-            $warn_message = 'Your session will expire in ' . $session_ttl . ' minutes. Please register an account to save your current chat history.';
-            session()->now('warning',$warn_message);
-        }
+        $this->sessionService->handleTimeoutWarning($chat_model);
         return $chat_model;
     }
 }
