@@ -33,7 +33,7 @@ class SessionService
         return (config('session.lifetime') - Carbon::now()->diffInMinutes($chat_model->created_at));
     }
 
-    public function handleTimeoutWarning(AiChat $chat_model)
+    public function handleTimeoutWarning(AiChat $chat_model): void
     {
         $session_ttl = self::timeToLive($chat_model);
 
@@ -41,5 +41,13 @@ class SessionService
             $warn_message = 'Your session will expire in ' . $session_ttl . ' minutes. Please register an account to save your current chat history.';
             session()->now('warning', $warn_message);
         }
+    }
+
+    public function guestSessionExpired(AiChat $chat_model): bool
+    {
+        if (!Auth::user()) {
+            return self::timeToLive($chat_model) <= 0;
+        }
+        return false;
     }
 }
