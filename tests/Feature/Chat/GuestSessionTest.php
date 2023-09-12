@@ -22,6 +22,10 @@ class GuestSessionTest extends TestCase
         $this->sessionService = app()->make(SessionService::class);
     }
 
+    /**
+     * Test if new sessionId is generated when existing session entry exceeds 1 day old
+     * @group requires-database
+     */
     public function test_session_regenerated_on_expiry(): void
     {
         // Create expired session
@@ -31,26 +35,26 @@ class GuestSessionTest extends TestCase
 
         $response = $this->get('/chat');
         $response->assertStatus(200);
-        $this->assertFalse($expired_chat_model->validSession());
+        $this->expectException(\Exception::class);
+        $this->assertFalse($this->sessionService->validate($expired_chat_model));
     }
     /**
      * Test valid guest session validation
+     * @group requires-database
      */
     public function test_valid_guest_session(): void
     {
         $chat_model = $this->chatRepository->findOrCreateChatModel(['session_id' => session()->getId()]);
-        $this->assertTrue($chat_model->validSession());
-        
-        $this->sessionService->validate($chat_model);
+        $this->assertNull($this->sessionService->validate($chat_model));
     }    
     /**
-     * Test invalid guest session validation
+     * Test expired guest session validation
+     * @group requires-database
      */
     public function test_expired_guest_session(): void
     {
         $expired_chat_model = $this->chatRepository->findOrCreateChatModel(['session_id' => session()->getId()]);
         session()->regenerate();
-        $this->assertFalse($expired_chat_model->validSession());
         
         $this->expectException(\Exception::class);
         $this->sessionService->validate($expired_chat_model);
