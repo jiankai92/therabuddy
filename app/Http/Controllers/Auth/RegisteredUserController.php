@@ -3,18 +3,23 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Http\Requests\Auth\RegisterAccountRequest;
 use App\Providers\RouteServiceProvider;
-use Illuminate\Auth\Events\Registered;
+use App\Services\Ajax\AjaxResponseService;
+use App\Services\Chat\ChatService;
+use App\Services\UserService;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
 {
+    public function __construct(
+        protected ChatService $chatService,
+        protected UserService $userService,
+        protected AjaxResponseService $ajaxResponseService
+    ){}
+    
     /**
      * Display the registration view.
      */
@@ -25,28 +30,27 @@ class RegisteredUserController extends Controller
 
     /**
      * Handle an incoming registration request.
-     *
-     * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(RegisterAccountRequest $request): RedirectResponse
     {
-        $request->validate([
-            'name' => ['required', 'string', 'min:4', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+        try {
+            $user = $this->userService->handleRegisterAccount($request);
+            return redirect(RouteServiceProvider::CHAT)->with('success', 'Account Created successfully');
+        } catch (\Exception $ex) {
+            return redirect()->back()->with('error', $ex->getMessage());
+        }
+    }
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
-
-        event(new Registered($user));
-
-        Auth::login($user);
-
-        return redirect(RouteServiceProvider::CHAT)->with('success','User Registered Successfully');
+    public function ajaxStore(RegisterAccountRequest $request): \Illuminate\Http\JsonResponse
+    {
+        try {
+            $user = $this->userService->handleRegisterAccount($request);
+            return $this->ajaxResponseService->setCode(200)->setBody(
+                ['success', 'Account Created successfully']
+            )->send();
+        } catch (\Exception $ex) {
+            return $this->ajaxResponseService->setError($ex->getMessage(), 500)->send();
+        }
     }
 
     public function ajaxRedirect(): RedirectResponse

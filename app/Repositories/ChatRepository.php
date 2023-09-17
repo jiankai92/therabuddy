@@ -34,4 +34,9 @@ class ChatRepository
         }
         return $model;
     }
+
+    public function assignUserIdToModel(AiChat $chat_model, $user_id): void
+    {
+        $chat_model->update(['user_id' => $user_id]);
+    }
 }

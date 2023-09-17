@@ -86,4 +86,17 @@ class ChatService
         $this->sessionService->handleTimeoutWarning($chat_model);
         return $chat_model;
     }
+
+    /**
+     * Save user chat history by assigning created user_id to existing ai_chat entry matching session_id
+     * @param int $user_id
+     * @param string $session_id
+     */
+    public function storeSessionChatHistory(int $user_id, string $session_id): void
+    {
+        $chat_model = $this->chatRepository->findBySession($session_id);
+        if ($chat_model) {
+            $this->chatRepository->assignUserIdToModel($chat_model, $user_id);
+        }
+    }
 }

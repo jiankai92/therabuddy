@@ -81,7 +81,7 @@
                 },
                 register() {
                     this.clearError();
-                    axios.post('{{route('register')}}', this.formData)
+                    axios.post('{{route('modal-register')}}', this.formData)
                         .then((response) => {
                             window.location = '/register-ajax/redirect'
                         }, (error) => {
