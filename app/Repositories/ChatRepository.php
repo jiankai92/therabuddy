@@ -18,7 +18,8 @@ class ChatRepository
     }
 
     /**
-     * Finds users ai_chat entry or creates one if it doesn't exist
+     * Finds ai_chat entry based on condition or creates one if it doesn't exist
+     * Key pair value condition are session_id (non logged in) or user_id (logged in)
      * @param array $condition
      * @return mixed
      * @throws Exception
