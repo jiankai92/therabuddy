@@ -55,7 +55,7 @@
                     from: 'bot',
                     text: 'Hello world!'
                 }],
-                addChat: function (input, product) {
+                addChat: function (input) {
                     Promise.resolve(
                         this.messages.push({
                             from: 'user',
@@ -83,12 +83,14 @@
 
                     setTimeout(() => {
                         this.botTyping = false;
-                        this.messages.push({
-                            from: 'bot',
-                            text: 'hardcoded'
+                        Promise.resolve(
+                            this.messages.push({
+                                from: 'bot',
+                                text: 'hardcoded'
+                            })
+                        ).then(() => {
+                            this.scrollToBottom();
                         });
-                        this.scrollToBottom();
-                        this.enableChatBox();
                     }, (Math.floor(Math.random() * 2000) + 1500))
                 },
                 scrollToBottom: function () {
