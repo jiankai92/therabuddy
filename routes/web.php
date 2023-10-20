@@ -20,10 +20,6 @@ Route::prefix('chat')->namespace('Chat')->middleware(['guest.session'])->group(f
     Route::get('/', 'ChatController@index')->name('chat');
     Route::post('/send/text', 'ChatController@textChatSubmitAjax')->name('text-chat-submit');
 });
-// Auth added routes
-/*Route::get('/', function () {
-    return view('welcome');
-});*/
 
 Route::get('/dashboard', function () {
     return view('dashboard');
