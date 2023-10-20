@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Chat\ChatController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::redirect('/', '/chat');
-
+Route::get('/chat2', [ChatController::class, 'index2'])->name('chat2');
 Route::prefix('chat')->namespace('Chat')->middleware(['guest.session'])->group(function () {
     Route::get('/', 'ChatController@index')->name('chat');
     Route::post('/send/text', 'ChatController@textChatSubmitAjax')->name('text-chat-submit');

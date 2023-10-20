@@ -43,6 +43,10 @@ class ChatController extends Controller
         }
     }
 
+    public function index2()
+    {
+        return view('chat.index2');
+    }
     /**
      * Show the form for creating a new resource.
      */
