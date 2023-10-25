@@ -20,13 +20,11 @@
         <div x-show="botTyping" x-ref="typing">
             <div class="flex items-end">
                 <div class="flex flex-col space-y-2 text-md leading-tight mx-2 order-2 items-start">
-                    <div>
-                        <img src="https://support.signal.org/hc/article_attachments/360016877511/typing-animation-3x.gif"
-                             alt="..." class="w-16 ml-6"></div>
+                    <x-chat.typing-bubble></x-chat.typing-bubble>
                 </div>
             </div>
         </div>
-        <div class="border-t-2 border-gray-200 px-4 pt-4 mb-2 sm:mb-0 fixed w-full bottom-0 flex">
+        <div class="border-t-2 bg-slate-100 border-gray-200 px-4 pt-4 mb-2 sm:mb-0 fixed w-full bottom-0 flex">
             <textarea name="message-to-send" id="message-to-send"
                       placeholder="Type your message"
                       class="w-full px-5 py-3.5 mb-2 resize-none rounded h-14 max-h-[240px]"
@@ -69,9 +67,11 @@
                     Promise.resolve(
                         this.messages.push({
                             from: 'user',
-                            text: input
+                            text: input.value.trim()
                         })
                     ).then(() => {
+                        input.value = '';
+                        this.updateChatBoxHeight(input);
                         this.scrollToBottom();
                     });
                 },
@@ -109,9 +109,7 @@
                 },
                 updateChat: function (target) {
                     if (this.botTyping === false && target.value.trim()) {
-                        this.updateChatBoxHeight(target);
-                        this.handleInput(target.value.trim())
-                        target.value = '';
+                        this.handleInput(target);
                         this.handleOutput();
                     }
                 },
