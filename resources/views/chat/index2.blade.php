@@ -122,14 +122,12 @@
                 updateChatBoxGutterHeight: function (DOMChatBox, initialHeight = '52') {
                     let target = document.getElementById('chatbar-gutter');
                     let targetInitialHeightPx = 0;
-                    console.log(target.classList);
                     for (let i = 0; i < target.classList.length; i++) {
                         if (target.classList[i].includes('h')) {
                             targetInitialHeightPx = helpers.convertTailwindClassValueToPx(target.classList[i]);
                             break;
                         }
                     }
-                    console.log(targetInitialHeightPx);
                     let targetHeight = targetInitialHeightPx - initialHeight + DOMChatBox.scrollHeight;
                     if (targetHeight > targetInitialHeightPx) {
                         target.style.height = targetHeight + 'px';
