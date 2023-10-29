@@ -41,7 +41,7 @@
             </div>
         </div>
     </div>
-    <div class="h-24"></div>
+    <div id="chatbar-gutter" class="h-24"></div>
 @endsection
 
 @section('scripts')
@@ -122,6 +122,7 @@
                 updateChatBoxGutterHeight: function (DOMChatBox, initialHeight = '52') {
                     let target = document.getElementById('chatbar-gutter');
                     let targetInitialHeightPx = 0;
+                    console.log(target.classList);
                     for (let i = 0; i < target.classList.length; i++) {
                         if (target.classList[i].includes('h')) {
                             targetInitialHeightPx = helpers.convertTailwindClassValueToPx(target.classList[i]);
