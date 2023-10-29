@@ -27,7 +27,7 @@
         <div class="border-t-2 bg-slate-100 border-gray-200 px-4 pt-4 mb-2 sm:mb-0 fixed w-full bottom-0 flex">
             <textarea name="message-to-send" id="message-to-send"
                       placeholder="Type your message"
-                      class="w-full px-5 py-3.5 mb-2 resize-none rounded h-14 max-h-[240px]"
+                      class="w-full px-5 py-3.5 mb-2 resize-none rounded h-[52px] max-h-[240px]"
                       x-ref="chatBox"
                       @keydown.enter="chatBoxEnter($event)"
                       x-on:input="updateChatBoxHeight($event.target)"
@@ -41,7 +41,7 @@
             </div>
         </div>
     </div>
-    <div class="h-28"></div>
+    <div class="h-24"></div>
 @endsection
 
 @section('scripts')
@@ -113,10 +113,29 @@
                         this.handleOutput();
                     }
                 },
-                updateChatBoxHeight: function (DOMChatBox, initialHeight = '56') {
+                updateChatBoxHeight: function (DOMChatBox, initialHeight = '52') {
                     DOMChatBox.style.height = initialHeight + 'px';
-                    DOMChatBox.style.height = DOMChatBox.scrollHeight + 'px';
-                }
+                    let maxHeight = helpers.convertPxToAbsolute(window.getComputedStyle(DOMChatBox).getPropertyValue('max-height'));
+                    DOMChatBox.style.height = DOMChatBox.scrollHeight < maxHeight ? DOMChatBox.scrollHeight + 'px' : maxHeight + 'px';
+                    this.updateChatBoxGutterHeight(DOMChatBox, initialHeight)
+                },
+                updateChatBoxGutterHeight: function (DOMChatBox, initialHeight = '52') {
+                    let target = document.getElementById('chatbar-gutter');
+                    let targetInitialHeightPx = 0;
+                    for (let i = 0; i < target.classList.length; i++) {
+                        if (target.classList[i].includes('h')) {
+                            targetInitialHeightPx = helpers.convertTailwindClassValueToPx(target.classList[i]);
+                            break;
+                        }
+                    }
+                    console.log(targetInitialHeightPx);
+                    let targetHeight = targetInitialHeightPx - initialHeight + DOMChatBox.scrollHeight;
+                    if (targetHeight > targetInitialHeightPx) {
+                        target.style.height = targetHeight + 'px';
+                    } else {
+                        target.style.height = null;
+                    }
+                },
             }
         }
     </script>
