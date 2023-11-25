@@ -3,6 +3,10 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+    [x-cloak] { display: none !important; }
+}
+
 @layer utilities {
     .clearfix:after {
         visibility: hidden;

@@ -3,21 +3,15 @@
     <div x-data="chatBot()" id="messages" class="flex flex-col space-y-4 p-3">
         <template x-for="(message, key) in messages">
             <div>
-                <div class="flex items-end" :class="message.from=='bot'?'':'justify-end'">
-                    <div class="flex flex-col space-y-2 text-md leading-tight max-w-lg mx-2"
-                         :class="message.from=='bot'?'order-2 items-start':'order-1 items-end'">
-                        <div>
-                           <span class="px-4 py-3 rounded-xl inline-block"
-                                 :class="message.from=='bot'?'rounded-bl-none bg-gray-100 text-gray-600':'rounded-br-none bg-blue-500 text-white'"
-                                 x-html="message.text"></span>
-                        </div>
-                    </div>
-                    <img :src="message.from=='bot'?'https://cdn.icon-icons.com/icons2/1371/PNG/512/robot02_90810.png':'https://i.pravatar.cc/100?img=7'"
-                         alt="" class="w-6 h-6 rounded-full" :class="message.from=='bot'?'order-1':'order-2'">
-                </div>
+                <template x-if="message.from !== 'bot'">
+                    <x-chat.outgoing-bubble></x-chat.outgoing-bubble>
+                </template>
+                <template x-if="message.from === 'bot'">
+                    <x-chat.incoming-bubble></x-chat.incoming-bubble>
+                </template>
             </div>
         </template>
-        <div x-show="botTyping" x-ref="typing">
+        <div x-cloak x-show="botTyping" x-ref="typing">
             <div class="flex items-end">
                 <div class="flex flex-col space-y-2 text-md leading-tight mx-2 order-2 items-start">
                     <x-chat.typing-bubble></x-chat.typing-bubble>
