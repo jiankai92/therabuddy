@@ -2,7 +2,7 @@
 @section('content')
     <div x-data="chatBot()" id="messages" class="flex flex-col space-y-4 p-3">
         <template x-for="(message, key) in messages">
-            <div>
+            <div class="space-y-2 leading-tight text-white">
                 <template x-if="message.from !== 'bot'">
                     <x-chat.outgoing-bubble></x-chat.outgoing-bubble>
                 </template>
