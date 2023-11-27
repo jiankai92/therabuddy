@@ -1,5 +1,5 @@
 <div aria-label="Loading Bubble"
-     class="bg-[#e5e5e5] h-[70px] w-[45px] translate-x-0 translate-y-0 ml-20 
+     class="bg-[#e5e5e5] h-[70px] w-[45px] translate-x-0 translate-y-0 ml-20 z-[-1]
      before:bg-[#e5e5e5] before:h-[70px] before:w-[70px] before:absolute before:block before:left-[5px] before:rounded-full
      after:bg-[#e5e5e5] after:h-[70px] after:w-[70px] after:absolute after:block after:right-[5px] after:rounded-full">
     <div class="absolute z-[1] w-[70px] left-[-10px] bottom-[25px]">
